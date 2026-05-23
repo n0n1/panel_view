@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:panel_view/src/domain/entities/panel_state.dart';
 import 'package:panel_view/src/domain/services/panel_manager_service.dart';
 import 'package:panel_view/src/presentation/widgets/resizable_panel.dart';
 
@@ -23,27 +24,20 @@ class GlobalPanelOverlay extends StatelessWidget {
       initialEntries: [
         OverlayEntry(
           builder: (overlayContext) {
-            return StreamBuilder<Map<String, dynamic>>(
+            return StreamBuilder<Map<String, PanelState>>(
               stream: panelManager.panelsStream,
               builder: (context, snapshot) {
                 final panels = panelManager.getOpenPanelsSorted();
                 final builders = panelManager.panelBuilders;
-                debugPrint(
-                  'GlobalPanelOverlay: Rendering ${panels.length} open panels',
-                );
-                debugPrint('Available builders: ${builders.keys.toList()}');
 
                 if (panels.isEmpty) {
-                  debugPrint('No open panels, returning empty widget');
                   return const SizedBox.shrink();
                 }
 
                 return Stack(
                   children: panels.map((panel) {
-                    debugPrint('Rendering panel: ${panel.id}');
                     final builder = builders[panel.id];
                     if (builder == null) {
-                      debugPrint('No builder found for panel: ${panel.id}');
                       return const SizedBox.shrink();
                     }
 
@@ -58,8 +52,9 @@ class GlobalPanelOverlay extends StatelessWidget {
                       panelManager: panelManager,
                       title: builder.title,
                       icon: builder.icon,
-                      header:
-                          builder.customHeaderBuilder?.call(onCloseCallback),
+                      header: builder.customHeaderBuilder?.call(
+                        onCloseCallback,
+                      ),
                       onClose: onCloseCallback,
                       child: builder.builder(overlayContext),
                     );

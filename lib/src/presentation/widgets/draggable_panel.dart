@@ -157,7 +157,7 @@ class _DraggablePanelState extends State<DraggablePanel> {
               ),
             ),
           const Spacer(),
-          if (widget.onClose != null)
+          if (widget.onClose != null && widget.config.isDismissible)
             IconButton(
               icon: const Icon(Icons.close, size: 18),
               onPressed: widget.onClose,

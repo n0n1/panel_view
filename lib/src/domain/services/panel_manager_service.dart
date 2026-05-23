@@ -67,22 +67,14 @@ class PanelManagerService {
 
   /// Toggle panel open/close
   void togglePanel(String id) {
-    debugPrint('PanelManagerService.togglePanel($id) called');
     final panel = _panels[id];
-    if (panel == null) {
-      debugPrint('Panel $id not found in registry');
-      return;
-    }
+    if (panel == null) return;
 
-    debugPrint('Panel $id current state: isOpen=${panel.isOpen}');
     if (panel.isOpen) {
-      debugPrint('Closing panel $id');
       closePanel(id);
     } else {
-      debugPrint('Opening panel $id');
       openPanel(id);
     }
-    debugPrint('Panel $id new state: isOpen=${_panels[id]?.isOpen}');
   }
 
   /// Bring panel to front (highest z-index)
@@ -198,13 +190,11 @@ class PanelManagerService {
   /// Register a panel builder dynamically
   void registerPanelBuilder(String id, PanelContentBuilder builder) {
     _panelBuilders[id] = builder;
-    debugPrint('Registered panel builder: $id');
   }
 
   /// Unregister panel builder
   void unregisterPanelBuilder(String id) {
     _panelBuilders.remove(id);
-    debugPrint('Unregistered panel builder: $id');
   }
 
   /// Get panel builder
@@ -217,15 +207,9 @@ class PanelManagerService {
   /// Set initial panel builders (called once at startup)
   void setInitialBuilders(Map<String, PanelContentBuilder> builders) {
     _panelBuilders.addAll(builders);
-    debugPrint('Initialized with ${builders.length} panel builders');
   }
 
   void _notifyListeners() {
-    final openPanels =
-        _panels.values.where((p) => p.isOpen).map((p) => p.id).toList();
-    debugPrint(
-      'PanelManagerService: Notifying listeners. Open panels: $openPanels',
-    );
     _panelsController.add(Map.unmodifiable(_panels));
   }
 

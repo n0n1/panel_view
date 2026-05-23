@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:panel_view/src/domain/entities/panel_state.dart';
 import 'package:panel_view/src/domain/services/panel_manager_service.dart';
 
 /// A panel widget with drag and resize capabilities
@@ -34,7 +35,7 @@ class _ResizablePanelState extends State<ResizablePanel> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<String, dynamic>>(
+    return StreamBuilder<Map<String, PanelState>>(
       stream: widget.panelManager.panelsStream,
       builder: (context, snapshot) {
         final panel = widget.panelManager.getPanel(widget.panelId);
@@ -74,7 +75,7 @@ class _ResizablePanelState extends State<ResizablePanel> {
     );
   }
 
-  Widget _buildPanelContent(dynamic panel) {
+  Widget _buildPanelContent(PanelState panel) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -110,7 +111,7 @@ class _ResizablePanelState extends State<ResizablePanel> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Header
-                widget.header ?? _buildDefaultHeader(),
+                widget.header ?? _buildDefaultHeader(panel),
 
                 // Divider
                 Divider(
@@ -132,7 +133,7 @@ class _ResizablePanelState extends State<ResizablePanel> {
     );
   }
 
-  Widget _buildDefaultHeader() {
+  Widget _buildDefaultHeader(PanelState panel) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -152,7 +153,7 @@ class _ResizablePanelState extends State<ResizablePanel> {
               ),
             ),
           const Spacer(),
-          if (widget.onClose != null)
+          if (widget.onClose != null && panel.config.isDismissible)
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -175,7 +176,7 @@ class _ResizablePanelState extends State<ResizablePanel> {
     );
   }
 
-  Widget _buildResizeHandles(dynamic panel) {
+  Widget _buildResizeHandles(PanelState panel) {
     const handleSize = 12.0;
 
     return Stack(

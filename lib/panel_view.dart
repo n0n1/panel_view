@@ -1,5 +1,3 @@
-library panel_view;
-
 export 'src/domain/entities/panel_config.dart';
 export 'src/domain/entities/panel_state.dart';
 export 'src/domain/services/panel_manager_service.dart';
