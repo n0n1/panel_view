@@ -117,7 +117,7 @@ class _ExampleHome extends StatelessWidget {
                       label: const Text('Toggle notes'),
                     ),
                     FilledButton.tonalIcon(
-                      onPressed: () => panelManager.togglePanel('inspector'),
+                      onPressed: () => _toggleInspector(context),
                       icon: const Icon(Icons.tune),
                       label: const Text('Toggle inspector'),
                     ),
@@ -149,6 +149,31 @@ class _ExampleHome extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _toggleInspector(BuildContext context) {
+    final inspector = panelManager.getPanel('inspector');
+    if (inspector?.isOpen ?? false) {
+      panelManager.closePanel('inspector');
+      return;
+    }
+
+    final mediaQuery = MediaQuery.of(context);
+    final safeArea = mediaQuery.padding;
+    final viewport = mediaQuery.size;
+    final panelWidth = (viewport.width - 32).clamp(260.0, 320.0).toDouble();
+    final panelHeight = (viewport.height * 0.42).clamp(220.0, 260.0).toDouble();
+    final left =
+        ((viewport.width - panelWidth) / 2).clamp(16.0, viewport.width);
+    final top = (viewport.height - safeArea.bottom - panelHeight - 24).clamp(
+      safeArea.top + 16,
+      viewport.height,
+    );
+
+    panelManager.updateSize('inspector', Size(panelWidth, panelHeight));
+    panelManager.updatePosition(
+        'inspector', Offset(left.toDouble(), top.toDouble()));
+    panelManager.openPanel('inspector');
   }
 }
 
