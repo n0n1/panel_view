@@ -1,6 +1,6 @@
 name: panel_view
 description: A draggable and resizable floating panel system for Flutter apps.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/n0n1/panel_view
 issue_tracker: https://github.com/n0n1/panel_view/issues
 topics:
